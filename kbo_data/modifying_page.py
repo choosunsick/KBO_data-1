@@ -4,6 +4,10 @@
 
 import json
 import pandas as pd
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 def get_date(record_dict):
     date = record_dict.keys()[0]
@@ -23,3 +27,16 @@ def make_df(record_dict):
     df = pd.DataFrame({"date":get_date(record_dict),"away":get_away_team(record_dict),
               "home":get_home_team(record_dict),"doubleheader":get_doubleheader(record_dict)},index =[0])
     return df
+
+def change_inning(item):
+    if ('/' and " ") in list(str(item)):
+        inning=int(list(item)[0])
+        rest_inning=list(item)[2]
+    elif '/' in list(str(item)):
+        inning=0
+        rest_inning=int(item.split('\/')[0])
+    else:
+        inning=item
+        rest_inning=0
+    
+    return [inning,rest_inning]
